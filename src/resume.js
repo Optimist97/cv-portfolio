@@ -2,6 +2,7 @@ const $ = (id) => document.getElementById(id);
 const escape = (value = '') => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const show = (id, visible) => { $(id).hidden = !visible; };
 const safeUrl = (value = '') => { try { const url = new URL(value); return ['https:', 'http:'].includes(url.protocol) ? escape(url.href) : ''; } catch { return ''; } };
+document.getElementById('printCv')?.addEventListener('click', () => window.print());
 
 async function main() {
 try {
