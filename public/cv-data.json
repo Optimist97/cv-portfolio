@@ -1,0 +1,85 @@
+{
+  "general": {
+    "name": "Clémence Martin",
+    "title": "Designer numérique · Développement front-end",
+    "profilePhoto": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=320&h=320&fit=crop&crop=faces",
+    "showPhoto": true,
+    "favicon": "/favicon.svg",
+    "year": 2026
+  },
+  "contact": {
+    "email": "clemence@example.com",
+    "phone": "+33 6 12 34 56 78",
+    "linkedin": "https://www.linkedin.com/",
+    "portfolio": "https://example.com"
+  },
+  "profile": {
+    "summary": "Designer numérique et développeuse front-end, je donne vie à des expériences web à la fois sensibles, accessibles et simples à utiliser. J’aime trouver le juste équilibre entre une idée singulière et une réalisation soignée."
+  },
+  "maintenance": {
+    "enabled": false,
+    "message": "Ce site est en maintenance. Revenez bientôt !"
+  },
+  "experiences": [
+    {
+      "id": 1,
+      "title": "Développeuse web",
+      "company": "Studio Créatif",
+      "location": "Paris",
+      "period": "2022 — Aujourd’hui",
+      "description": "Création de sites web accessibles et accompagnement des clients dans leurs projets numériques.",
+      "technologies": [
+        "JavaScript",
+        "CSS"
+      ]
+    }
+  ],
+  "educations": [
+    {
+      "id": 2,
+      "degree": "Licence Informatique",
+      "school": "Université de Paris",
+      "location": "Paris",
+      "period": "2019 — 2022",
+      "description": "Spécialisation en développement web."
+    }
+  ],
+  "skills": [
+    {
+      "category": "Développement",
+      "items": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ]
+    },
+    {
+      "category": "Design",
+      "items": [
+        "Figma",
+        "Accessibilité"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "title": "Portfolio créatif",
+      "description": "Un site vitrine pour présenter des projets et partager mon travail.",
+      "link": "",
+      "technologies": [
+        "HTML",
+        "CSS"
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "language": "Français",
+      "level": "Natif"
+    },
+    {
+      "language": "Anglais",
+      "level": "Courant"
+    }
+  ]
+}
