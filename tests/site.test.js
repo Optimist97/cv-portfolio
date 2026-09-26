@@ -79,5 +79,5 @@ test('imported profile photos are converted to WebP and cleaned up in public ass
   assert.match(editor, /\^profile-\[a-f0-9\]\{16\}\\\.webp\$/);
   assert.match(cms, /public\/assets\//);
   assert.match(cms, /nettoyés/);
-  assert.equal(JSON.parse(await readFile('dist/cv-data.json', 'utf8')).general.profilePhoto, 'https://images.unsplash.com/photo-1589154831836-71fa41c229ce?w=480&h=560&fit=crop&crop=faces');
+  assert.equal(JSON.parse(await readFile('dist/cv-data.json', 'utf8')).general.profilePhoto, 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=480&h=560&fit=crop&crop=faces');
 });
