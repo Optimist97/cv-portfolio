@@ -1,4 +1,4 @@
-# CV éditorial — Noor De Smet (profil fictif)
+# CV éditorial — Camille De Smet (profil fictif)
 
 Un CV public élégant, responsive et imprimable, accompagné d’un mini-CMS web pour modifier le profil, la photo, les sections et le mode maintenance. Le profil belge fourni est entièrement fictif : adaptez-le avant de publier.
 
