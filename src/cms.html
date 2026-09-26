@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Connexion — Éditeur de CV</title>
+  <link rel="icon" href="/favicon.svg" />
+  <style>
+    .sidebar-header { background:#faf8f4 !important; }
+    .form-group input, .form-group textarea, .form-group select { background:#faf8f4; border-radius:7px; }
+    .btn { border-radius:7px; }
+    .list-item { background:#faf8f4; border-color:#e8e3da; border-radius:9px; }
+    .profile-photo-preview { border-color:#d2a18c; }
+    .timeline-item-preview { border-left:1px solid #e3ddd4; padding-left:1.25rem; margin-left:.25rem; }
+    .timeline-item-preview::before { left:-5px; width:9px; height:9px; background:#a34f37; }
+    .item-title-preview { color:#30312e; }
+    .item-period { color:#a34f37; font-size:.82rem; }
+    .preview-section > p { color:#62645f; max-width:68ch; line-height:1.8; white-space:pre-line; }
+    .skill-tag { background:#f3f0eb; color:#4a4b47; padding:.4rem .75rem; border-radius:3px; font-size:.84rem; }
+    .project-card { border-top:1px solid #e3ddd4; padding:1rem 0; }
+    .project-card h3 { color:#30312e; margin-bottom:.3rem; }
+    .project-card p { color:#686963; line-height:1.7; }
+    .cv-preview footer { border-top:1px solid #e3ddd4; margin-top:2.5rem; color:#777872; letter-spacing:.08em; text-transform:uppercase; font-size:.75rem; }
+    .preview-section[hidden] { display:none; }
+    @media(max-width:1200px) { .cv-preview { padding:0 2rem; } }
+    @media(max-width:600px) { .preview-area { padding:0; } .cv-preview { padding:0 1.25rem; } .preview-header { padding-top:2rem; } .preview-name { font-size:2.2rem; } }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #a34f37;
+      --secondary: #783b2d;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --warning: #ca8a04;
+      --bg-dark: #f3f0eb;
+      --bg-panel: #fffdfa;
+      --text-light: #2e302e;
+      --text-muted: #777872;
+      --border: #e6e1d9;
+    }
+
+    body {
+      font-family: Inter, 'Avenir Next', 'Segoe UI', sans-serif;
+      background: #eae6df;
+      color: var(--text-light);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .app-container {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar - CMS Controls */
+    .sidebar {
+      width: 370px;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.2);
+    }
+
+    .sidebar-header h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-header p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    .control-section {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .control-section h3 {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 0.375rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.625rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: rgba(0,0,0,0.2);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--secondary);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    .btn-secondary:hover {
+      background: #4b5563;
+    }
+
+    /* List controls */
+    .item-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .list-items {
+      padding: 0 1.25rem 1.25rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .list-item {
+      background: rgba(0,0,0,0.1);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .list-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .list-item-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+    }
+
+    /* Main Preview Area */
+    .preview-area {
+      flex: 1;
+      overflow: auto;
+      background: #eae6df;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .cv-preview {
+      background: white;
+      width: 100%;
+      max-width: 820px;
+      min-height: 100vh;
+      box-shadow: 0 18px 55px rgba(54, 45, 35, 0.12);
+      padding: 0 4rem;
+    }
+
+    /* Real-time preview styles */
+    .preview-header {
+      text-align: left;
+      padding: 4rem 0 2rem;
+      border-bottom: 1px solid #ddd6cc;
+      margin-bottom: 2.25rem;
+    }
+
+    .profile-photo-preview {
+      width: 104px;
+      height: 124px;
+      border-radius: 48% 48% 44% 44%;
+      object-fit: cover;
+      border: 4px solid #2563eb;
+      margin-bottom: 1rem;
+    }
+
+    .preview-name {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(2.4rem, 5vw, 3.7rem);
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+    }
+
+    .preview-title {
+      font-size: 1rem;
+      color: #a34f37;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .contact-info-preview {
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: .55rem 1.2rem;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .preview-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .preview-section-title {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #a34f37;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+
+    .timeline-item-preview {
+      margin-bottom: 1.5rem;
+      padding-left: 2rem;
+      position: relative;
+    }
+
+    .timeline-item-preview::before {
+      content: '';
+      position: absolute;
+      left: 0.75rem;
+      top: 5px;
+      width: 12px;
+      height: 12px;
+      background: #2563eb;
+      border-radius: 50%;
+    }
+
+    .item-title-preview {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .item-subtitle-preview {
+      font-size: 1rem;
+      color: #6b7280;
+      font-style: italic;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.2);
+    }
+
+    .tab {
+      padding: 0.625rem 1rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.875rem;
+      border-radius: 4px 4px 0 0;
+      transition: all 0.2s ease;
+    }
+
+    .tab:hover {
+      background: rgba(0,0,0,0.1);
+    }
+
+    .tab.active {
+      background: var(--bg-panel);
+      color: var(--text-light);
+    }
+
+    /* Status bar */
+    .status-bar {
+      padding: 0.625rem 1.5rem;
+      border-top: 1px solid var(--border);
+      background: rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .app-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: 300px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .preview-area {
+        height: calc(100vh - 350px);
+      }
+    }
+
+    .maintenance-screen { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; padding: 2rem; background: #f8fafc; color: #1f2937; text-align: center; font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 700; }
+    .maintenance-screen[hidden] { display: none; }
+    [hidden] { display: none !important; }
+    .login-page { min-height:100vh; display:grid; place-items:center; padding:2rem 1rem; background:#f3f0eb; }
+    .login-card { width:min(100%, 440px); padding:clamp(1.5rem,5vw,2.5rem); background:#fffdfa; border:1px solid #e6e1d9; border-radius:16px; box-shadow:0 24px 70px rgba(45,40,32,.09); }
+    .login-mark { color:#a34f37; font-size:.78rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; }
+    .login-card h1 { margin:1rem 0 .6rem; color:#30312e; font-family:Georgia,serif; font-size:clamp(2rem,7vw,2.7rem); font-weight:500; letter-spacing:-.04em; }
+    .login-intro,.login-note { color:#777872; font-size:.92rem; line-height:1.7; }
+    .login-field { margin:1.6rem 0 1rem; }
+    .login-field label { display:block; margin-bottom:.45rem; color:#4a4b47; font-size:.85rem; font-weight:600; }
+    .login-field input { width:100%; padding:.8rem .9rem; border:1px solid #d8d2c8; border-radius:7px; background:#fff; color:#30312e; font:inherit; }
+    .login-field input:focus { outline:2px solid rgba(163,79,55,.2); border-color:#a34f37; }
+    .login-submit { width:100%; padding:.85rem 1rem; border:0; border-radius:7px; background:#30312e; color:#fffdfa; font:inherit; font-weight:600; cursor:pointer; }
+    .login-submit:hover { background:#a34f37; }
+    .login-status { min-height:1.4em; margin-top:.8rem; color:#783b2d; font-size:.85rem; }
+    .login-note { margin-top:1.35rem; padding-top:1.1rem; border-top:1px solid #e6e1d9; font-size:.8rem; }
+    .login-note a { color:#783b2d; }
+  </style>
+</head>
+<body>
+  <main class="login-page" id="loginView">
+    <section class="login-card" aria-labelledby="loginTitle">
+      <p class="login-mark">CV Atelier · Espace privé</p>
+      <h1 id="loginTitle">Connexion à votre CV</h1>
+      <p class="login-intro">Connectez-vous avec votre jeton GitHub pour ouvrir l’éditeur et publier vos modifications.</p>
+      <div class="login-field">
+        <label for="githubToken">Jeton GitHub finement limité</label>
+        <input type="password" id="githubToken" autocomplete="off" spellcheck="false" placeholder="github_pat_…" aria-describedby="loginHelp">
+      </div>
+      <button class="login-submit" type="button" data-action="connectGitHub">Se connecter à GitHub</button>
+      <p id="loginStatus" class="login-status" role="status" aria-live="polite"></p>
+      <p class="login-note" id="loginHelp">Le jeton doit cibler uniquement <strong>Optimist97/cv-portfolio</strong> avec la permission <strong>Contents · lecture et écriture</strong>. Il reste en mémoire dans cet onglet, jamais dans le stockage local. <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener noreferrer">Gérer les jetons GitHub</a>.</p>
+    </section>
+  </main>
+
+  <div class="app-container" id="editorApp" hidden>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>🎛️ Éditeur de CV</h2>
+        <p>Connecté à GitHub · vos données sont enregistrées dans ce navigateur.</p>
+        <p id="githubStatus" role="status" aria-live="polite" style="font-size:.8rem;margin-top:.5rem">Connecté</p>
+        <button class="btn btn-secondary" type="button" data-action="disconnectGitHub" style="margin-top:.6rem">Se déconnecter</button>
+      </div>
+
+      <!-- General Info -->
+      <div class="control-section" id="generalSection">
+        <h3>Informations Générales</h3>
+        
+        <div class="form-group">
+          <label>Nom complet *</label>
+          <input type="text" id="generalName" placeholder="Jean Dupont">
+        </div>
+
+        <div class="form-group">
+          <label>Titre / Poste</label>
+          <input type="text" id="generalTitle" placeholder="Développeur Web Full Stack">
+        </div>
+
+        <div class="form-group">
+          <label>Photo de profil</label>
+          <input type="url" id="generalProfilePhoto" placeholder="https://example.com/photo.jpg">
+          <input type="file" id="photoFile" accept="image/*" aria-label="Choisir une photo sur cet ordinateur">
+          <label><input type="checkbox" id="generalShowPhoto" checked> Afficher la photo</label>
+        </div>
+
+        <div class="form-group">
+          <label>Favicon URL</label>
+          <input type="url" id="generalFavicon" placeholder="https://example.com/favicon.ico">
+        </div>
+
+        <div class="form-group">
+          <label>Année copyright</label>
+          <input type="number" id="generalYear" value="2026" min="1900" max="2100">
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 1rem 0;">
+
+        <h3>Contact</h3>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="contactEmail" placeholder="jean.dupont@email.com">
+        </div>
+        
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="tel" id="contactPhone" placeholder="+33 6 12 34 56 78">
+        </div>
+
+        <div class="form-group">
+          <label>LinkedIn URL</label>
+          <input type="url" id="contactLinkedin" placeholder="https://linkedin.com/in/jean-dupont">
+        </div>
+
+        <div class="form-group">
+          <label>Portfolio/Website URL</label>
+          <input type="url" id="contactPortfolio" placeholder="https://jeandupont.dev">
+        </div>
+      </div>
+
+      <!-- Profile -->
+      <div class="control-section" id="profileSection">
+        <h3>Profil</h3>
+        <div class="form-group">
+          <label>Description / Résumé</label>
+          <textarea id="profileSummary" placeholder="Décrivez ici votre profil professionnel, vos motivations et ce que vous apportez..."></textarea>
+        </div>
+      </div>
+      <div class="control-section">
+        <h3>Publication</h3>
+        <label><input type="checkbox" id="maintenanceEnabled"> Activer la page de maintenance</label>
+        <div class="form-group"><label>Message affiché</label><textarea id="maintenanceMessage">Ce site est en maintenance. Revenez bientôt !</textarea></div>
+        <p style="font-size:.82rem;color:var(--text-muted);line-height:1.5;margin:.75rem 0">Les données publiées sont visibles par tous sur GitHub Pages.</p>
+        <button class="btn btn-primary" data-action="publishGitHub" disabled style="width:100%;justify-content:center">Publier les changements</button>
+        <button class="btn btn-secondary" data-action="bootstrapGitHub" disabled style="width:100%;margin-top:.5rem;justify-content:center">Installer le site dans le dépôt</button>
+      </div>
+
+      <!-- Dynamic Sections -->
+      <div class="control-section">
+        <h3>Expériences Professionnelles</h3>
+        <div id="experienceControls" style="margin-bottom: 0.5rem;">
+        <button class="btn btn-primary" data-action="addExperience">+ Ajouter une expérience</button>
+        </div>
+      <div class="list-items" id="experienceControlsList"></div>
+      </div>
+
+      <div class="control-section">
+        <h3>Formation</h3>
+        <div id="educationControls" style="margin-bottom: 0.5rem;">
+        <button class="btn btn-primary" data-action="addEducation">+ Ajouter une formation</button>
+        </div>
+        <div class="list-items" id="educationControlsList"></div>
+      </div>
+
+      <div class="control-section">
+        <h3>Compétences</h3>
+        <div class="form-group">
+          <label>Catégorie de compétences</label>
+          <select id="skillCategory">
+            <option value="Techniques">Techniques</option>
+            <option value="Langages">Langages de programmation</option>
+            <option value="Outils">Outils & Technologies</option>
+            <option value="Personnelles">Compétences personnelles</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Compétence</label>
+          <input type="text" id="skillInput" placeholder="Ex: JavaScript, Communication...">
+        </div>
+        <button class="btn btn-success" data-action="addSkill">+ Ajouter une compétence</button>
+        
+        <h3>Liste des compétences</h3>
+        <div class="list-items" id="skillsList"></div>
+      </div>
+
+      <div class="control-section">
+        <h3>Projets</h3>
+        <div id="projectControls" style="margin-bottom: 0.5rem;">
+        <button class="btn btn-primary" data-action="addProject">+ Ajouter un projet</button>
+        </div>
+        <div class="list-items" id="projectsList"></div>
+      </div>
+
+      <div class="control-section">
+        <h3>Langues</h3>
+        <div class="form-group">
+          <label>Langue & Niveau</label>
+          <input type="text" id="languageInput" placeholder="Ex: Français, Anglais">
+        </div>
+        <button class="btn btn-success" data-action="addLanguage">+ Ajouter une langue</button>
+        
+        <h3>Liste des langues</h3>
+        <div class="list-items" id="languagesList"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="control-section" style="border-bottom: none; padding: 1.25rem;">
+        <button class="btn btn-primary" data-action="saveData" style="width: 100%; justify-content: center;">💾 Sauvegarder</button>
+        <button class="btn btn-secondary" data-action="loadDemoData" style="width: 100%; margin-top: 0.5rem; justify-content: center;">📖 Charger exemple</button>
+        <button class="btn btn-success" data-action="exportJSON" style="width: 100%; margin-top: 0.5rem; justify-content: center;">📥 Exporter JSON</button>
+        <label class="btn btn-secondary" style="width:100%;margin-top:.5rem;justify-content:center;cursor:pointer">📤 Importer JSON<input id="importFile" type="file" accept="application/json,.json" hidden></label>
+        <button class="btn btn-danger" data-action="clearData" style="width: 100%; margin-top: 0.5rem; justify-content: center;">🗑️ Réinitialiser</button>
+      </div>
+
+      <!-- Status -->
+      <div class="status-bar">
+        <span id="saveStatus">Prêt</span>
+        <span id="lastSaved">-</span>
+      </div>
+    </aside>
+
+    <!-- Preview Area -->
+    <main class="preview-area">
+      <article class="cv-preview">
+        <header class="preview-header">
+          <img src="/placeholder.jpg" alt="Profil" class="profile-photo-preview" id="previewPhoto">
+          <h1 class="preview-name" id="previewName">Nom Prénom</h1>
+          <p class="preview-title" id="previewTitle">Titre du poste</p>
+          <div class="contact-info-preview" id="previewContact"></div>
+        </header>
+
+        <section class="preview-section">
+          <h2 class="preview-section-title">Profil</h2>
+          <p id="previewProfile">Votre profil apparaîtra ici...</p>
+        </section>
+        <footer style="text-align:center;padding:1.5rem;color:#6b7280">© <span id="previewYear"></span></footer>
+
+        <section class="preview-section">
+          <h2 class="preview-section-title">Expériences Professionnelles</h2>
+          <div id="previewExperience"></div>
+        </section>
+
+        <section class="preview-section">
+          <h2 class="preview-section-title">Formation</h2>
+          <div id="previewEducation"></div>
+        </section>
+
+        <section class="preview-section">
+          <h2 class="preview-section-title">Compétences</h2>
+          <div class="skills-grid" style="display: flex; flex-wrap: wrap; gap: 0.5rem;" id="previewSkills"></div>
+        </section>
+
+        <section class="preview-section">
+          <h2 class="preview-section-title">Projets</h2>
+          <div id="previewProjects"></div>
+        </section>
+
+        <section class="preview-section">
+          <h2 class="preview-section-title">Langues</h2>
+          <div id="previewLanguages" style="display: flex; gap: 1rem;"></div>
+        </section>
+      </article>
+    </main>
+  </div>
+  <div id="maintenanceScreen" class="maintenance-screen" hidden></div>
+
+  <script type="module">
+    import { App } from './pages/editor/app.js';
+    window.app = new App();
+  </script>
+</body>
+</html>
