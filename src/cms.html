@@ -429,6 +429,11 @@
     .login-status { min-height:1.4em; margin-top:.8rem; color:#783b2d; font-size:.85rem; }
     .login-note { margin-top:1.35rem; padding-top:1.1rem; border-top:1px solid #e6e1d9; font-size:.8rem; }
     .login-note a { color:#783b2d; }
+    .hr-audit { background:#f7f3ed; }
+    .hr-audit-intro { margin:-.35rem 0 1rem; color:var(--text-muted); font-size:.82rem; line-height:1.55; }
+    .hr-audit-list { display:grid; gap:.8rem; list-style:none; }
+    .hr-audit-list li { padding-left:.8rem; border-left:2px solid #d2a18c; color:#4a4b47; font-size:.82rem; line-height:1.55; }
+    .hr-audit-list strong { display:block; margin-bottom:.12rem; color:#30312e; }
   body{height:100dvh}body:has(#loginView:not([hidden])){height:auto;min-height:100vh;overflow:auto}.app-container{height:100dvh}.preview-area{background:#fffdfa;padding:0}.cv-preview{background:#fffdfa;min-height:100%;box-shadow:none}@media(max-width:1200px){.sidebar{flex:0 0 300px}.preview-area{height:auto;min-height:0;flex:1 1 auto}.cv-preview{max-width:none;padding:0 2rem}}@media(max-width:600px){.sidebar{flex-basis:300px}.cv-preview{padding:0 1.25rem}.preview-header{padding-top:2rem}.preview-name{font-size:2.2rem;overflow-wrap:anywhere}.contact-info-preview{gap:.55rem .8rem;overflow-wrap:anywhere}.preview-section{margin-bottom:1.8rem}}</style>
 </head>
 <body>
@@ -474,7 +479,8 @@
         <div class="form-group">
           <label>Photo de profil</label>
           <input type="url" id="generalProfilePhoto" placeholder="https://example.com/photo.jpg">
-          <input type="file" id="photoFile" accept="image/*" aria-label="Choisir une photo sur cet ordinateur">
+          <input type="file" id="photoFile" accept="image/jpeg,image/png,image/webp" aria-label="Choisir une photo sur cet ordinateur">
+          <small>JPEG, PNG ou WebP jusqu’à 15 Mo : l’image est redimensionnée et convertie en WebP. À la publication, elle est enregistrée dans <code>public/assets/</code> et les anciens portraits inutilisés sont nettoyés.</small>
           <label><input type="checkbox" id="generalShowPhoto" checked> Afficher la photo</label>
         </div>
 
@@ -523,6 +529,22 @@
           <textarea id="profileSummary" placeholder="Décrivez ici votre profil professionnel, vos motivations et ce que vous apportez..."></textarea>
         </div>
       </div>
+      <section class="control-section hr-audit" aria-labelledby="hrAuditTitle">
+        <h3 id="hrAuditTitle">Conseils RH · privés au CMS</h3>
+        <p class="hr-audit-intro">Repères généraux à adapter au poste, au secteur et au pays. Ce n’est ni une note ni une évaluation automatique de votre CV.</p>
+        <label class="contact-toggle" for="hrAuditToggle"><span>Afficher les commentaires</span><input type="checkbox" id="hrAuditToggle" role="switch" checked aria-controls="hrAuditComments"></label>
+        <div id="hrAuditComments">
+          <ul class="hr-audit-list">
+            <li><strong>Cibler le poste</strong>Adaptez le titre et les premiers mots du résumé à la fonction visée. Reprenez naturellement les compétences réellement maîtrisées que l’offre mentionne.</li>
+            <li><strong>Montrer les résultats</strong>Pour chaque expérience, précisez votre contribution, le contexte et le résultat. Ajoutez des chiffres uniquement s’ils sont vérifiables ; sinon, décrivez concrètement l’amélioration obtenue.</li>
+            <li><strong>Rendre le parcours lisible</strong>Présentez les expériences dans un ordre cohérent, avec dates, rôle, organisation et responsabilités faciles à repérer. Expliquez brièvement les transitions si elles risquent de prêter à confusion.</li>
+            <li><strong>Étayer les compétences</strong>Reliez les compétences importantes à une expérience ou à un projet. Indiquez honnêtement les niveaux d’outils et de langues, sans gonfler votre maîtrise.</li>
+            <li><strong>Valoriser les projets</strong>Quand c’est pertinent, ajoutez un lien accessible et résumez le besoin, votre rôle, vos choix et le résultat. Les projets personnels peuvent aussi démontrer une pratique quand l’expérience professionnelle est courte.</li>
+            <li><strong>Soigner la lecture et le tri automatique</strong>Gardez des rubriques explicites, un texte sélectionnable, des dates cohérentes et une longueur adaptée à votre expérience. Vérifiez le PDF sur ordinateur et téléphone ; conservez une version simple à analyser par les outils de recrutement.</li>
+            <li><strong>Garder les informations pertinentes</strong>Vérifiez les liens et coordonnées, et ne partagez que les informations personnelles utiles à votre candidature. La photo est facultative : choisissez selon le poste, le secteur et le contexte local.</li>
+          </ul>
+        </div>
+      </section>
       <div class="control-section">
         <h3>Publication</h3>
         <label><input type="checkbox" id="maintenanceEnabled"> Activer la page de maintenance</label>

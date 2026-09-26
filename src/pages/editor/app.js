@@ -25,6 +25,13 @@ class App {
   init() {
     this.bindEvents();
     this.renderAll();
+    const auditToggle = document.getElementById('hrAuditToggle');
+    if (auditToggle) {
+      let visible = true;
+      try { visible = localStorage.getItem('cv-hr-audit-visible') !== 'false'; } catch { /* storage may be disabled */ }
+      auditToggle.checked = visible;
+      document.getElementById('hrAuditComments').hidden = !visible;
+    }
     this.updateStatus('Enregistré');
     const localBootstrap = ['localhost', '127.0.0.1'].includes(window.location.hostname);
     document.querySelector('[data-action="bootstrapGitHub"]').hidden = !localBootstrap;
@@ -32,7 +39,7 @@ class App {
 
   bindEvents() {
     // Bind all input fields to update real-time preview
-    const inputs = document.querySelectorAll('input:not(#githubToken), textarea, select');
+    const inputs = document.querySelectorAll('input:not(#githubToken):not(#hrAuditToggle), textarea, select');
 
     inputs.forEach(input => {
       input.addEventListener('input', (e) => this.handleInputChange(e));
@@ -48,6 +55,11 @@ class App {
 
     // Bind specific sections to their inputs
     document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => this[button.dataset.action]()));
+    document.getElementById('hrAuditToggle').addEventListener('change', event => {
+      const visible = event.target.checked;
+      document.getElementById('hrAuditComments').hidden = !visible;
+      try { localStorage.setItem('cv-hr-audit-visible', String(visible)); } catch { /* the toggle still works for this session */ }
+    });
     document.getElementById('githubToken').addEventListener('keydown', event => {
       if (event.key === 'Enter') { event.preventDefault(); this.connectGitHub(); }
     });
@@ -107,16 +119,83 @@ class App {
     const endpoint = 'https://api.github.com/repos/Optimist97/cv-portfolio/contents/public/cv-data.json';
     const headers = { Authorization: `Bearer ${this.githubToken}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
     try {
+      const publishedData = clone(this.data);
+      publishedData.general.profilePhoto = await this.publishProfilePhoto(headers);
       const existing = await fetch(endpoint, { headers });
       let sha;
       if (existing.ok) sha = (await existing.json()).sha;
       else if (existing.status !== 404) throw new Error(`Lecture du dépôt impossible (${existing.status}).`);
-      const content = btoa(unescape(encodeURIComponent(JSON.stringify(this.data, null, 2) + '\n')));
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(publishedData, null, 2) + '\n')));
       const response = await fetch(endpoint, { method: 'PUT', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: 'Mettre à jour le CV depuis le mini-CMS', content, ...(sha ? { sha } : {}), branch: 'main' }) });
       if (!response.ok) { const result = await response.json(); throw new Error(result.message || `Publication refusée (${response.status}). Vérifie les droits Contents et la branche main.`); }
-      this.setGitHubStatus('Publié sur GitHub ✓ Le déploiement Pages va démarrer.');
+      try {
+        const removedPhotos = await this.cleanupUnusedPhotos(headers, publishedData.general.profilePhoto);
+        this.setGitHubStatus(`Publié sur GitHub ✓${removedPhotos ? ` ${removedPhotos} ancienne${removedPhotos > 1 ? 's' : ''} photo${removedPhotos > 1 ? 's' : ''} supprimée${removedPhotos > 1 ? 's' : ''}.` : ''} Le déploiement Pages va démarrer.`);
+      } catch (error) {
+        this.setGitHubStatus(`CV publié, mais le nettoyage des anciennes photos a échoué : ${error.message}`);
+      }
     } catch (error) { this.setGitHubStatus(error.message); }
     finally { button.disabled = !this.githubToken; }
+  }
+
+  async publishProfilePhoto(headers) {
+    const photo = this.data.general.profilePhoto || '';
+    const match = photo.match(/^data:image\/webp;base64,([a-z\d+/]+=*)$/i);
+    if (!photo.startsWith('data:')) return photo;
+    if (!match) throw new Error('La photo importée doit être convertie en WebP avant publication. Réimporte-la depuis ton ordinateur.');
+
+    const [, base64] = match;
+    const binary = atob(base64);
+    if (binary.length > 1_500_000) throw new Error('La photo WebP optimisée dépasse 1,5 Mo. Réduis ses dimensions puis réessaie.');
+    const bytes = Uint8Array.from(binary, character => character.charCodeAt(0));
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('').slice(0, 16);
+    const filename = `profile-${hash}.webp`;
+    const path = `public/assets/${filename}`;
+    const endpoint = `https://api.github.com/repos/Optimist97/cv-portfolio/contents/${path}`;
+    const current = await fetch(`${endpoint}?ref=main`, { headers });
+    let sha;
+    if (current.ok) sha = (await current.json()).sha;
+    else if (current.status !== 404) throw new Error(`Lecture de la photo dans GitHub impossible (${current.status}).`);
+
+    const uploaded = await fetch(endpoint, {
+      method: 'PUT',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'Ajouter la photo du CV dans assets', content: base64, ...(sha ? { sha } : {}), branch: 'main' })
+    });
+    if (!uploaded.ok) {
+      const result = await uploaded.json();
+      throw new Error(result.message || `Publication de la photo refusée (${uploaded.status}).`);
+    }
+    return `./assets/${filename}`;
+  }
+
+  async cleanupUnusedPhotos(headers, profilePhoto) {
+    const endpoint = 'https://api.github.com/repos/Optimist97/cv-portfolio/contents/public/assets?ref=main';
+    const response = await fetch(endpoint, { headers });
+    if (response.status === 404) return 0;
+    if (!response.ok) throw new Error(`Lecture du dossier assets impossible (${response.status}).`);
+    const files = await response.json();
+    if (!Array.isArray(files)) return 0;
+
+    const managedPhotos = files.filter(file => file.type === 'file' && /^profile-[a-f0-9]{16}\.webp$/i.test(file.name));
+    const currentPhoto = profilePhoto.match(/^\.\/assets\/(profile-[a-f0-9]{16}\.webp)$/i)?.[1];
+    let removed = 0;
+    for (const file of managedPhotos) {
+      if (file.name === currentPhoto) continue;
+      const fileEndpoint = `https://api.github.com/repos/Optimist97/cv-portfolio/contents/public/assets/${encodeURIComponent(file.name)}`;
+      const deletion = await fetch(fileEndpoint, {
+        method: 'DELETE',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Supprimer une ancienne photo inutilisée du CV', sha: file.sha, branch: 'main' })
+      });
+      if (!deletion.ok) {
+        const result = await deletion.json();
+        throw new Error(result.message || `Suppression de ${file.name} refusée (${deletion.status}).`);
+      }
+      removed++;
+    }
+    return removed;
   }
 
   async bootstrapGitHub() {
@@ -556,9 +635,46 @@ class App {
 
   readPhoto(event) {
     const file = event.target.files?.[0]; if (!file) return;
-    if (!file.type.startsWith('image/') || file.size > 2_000_000) { this.updateStatus('Choisissez une image de 2 Mo maximum'); event.target.value = ''; return; }
-    const reader = new FileReader(); reader.onload = () => { this.data.general.profilePhoto = reader.result; this.syncInputs(); this.renderPreview(); this.saveData(); };
-    reader.readAsDataURL(file);
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 15_000_000) { this.updateStatus('Choisissez une image JPEG, PNG ou WebP de 15 Mo maximum'); event.target.value = ''; return; }
+    this.updateStatus('Conversion de la photo en WebP…');
+    this.convertProfilePhoto(file).then(photo => {
+      this.data.general.profilePhoto = photo;
+      this.syncInputs(); this.renderPreview(); this.saveData();
+      this.updateStatus('Photo convertie en WebP et enregistrée ✓');
+    }).catch(error => {
+      this.updateStatus(`Conversion impossible : ${error.message}`);
+    }).finally(() => { event.target.value = ''; });
+  }
+
+  async convertProfilePhoto(file) {
+    const image = await createImageBitmap(file);
+    if (image.width * image.height > 40_000_000) {
+      image.close();
+      throw new Error('Les dimensions de la photo sont trop élevées. Réduis-la avant de la sélectionner.');
+    }
+    const maxDimension = 1600;
+    const scale = Math.min(1, maxDimension / Math.max(image.width, image.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(image.width * scale));
+    canvas.height = Math.max(1, Math.round(image.height * scale));
+    const context = canvas.getContext('2d');
+    if (!context) { image.close(); throw new Error('Le navigateur ne peut pas préparer cette image.'); }
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    image.close();
+
+    for (const quality of [0.86, 0.78, 0.70, 0.62]) {
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', quality));
+      if (!blob || blob.type !== 'image/webp') throw new Error('Ce navigateur ne prend pas en charge la conversion WebP.');
+      if (blob.size <= 1_500_000) {
+        return await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(new Error('Lecture de la photo convertie impossible.'));
+          reader.readAsDataURL(blob);
+        });
+      }
+    }
+    throw new Error('La photo reste trop volumineuse après optimisation. Essaie une image moins grande.');
   }
 
   exportJSON() {

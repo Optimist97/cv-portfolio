@@ -3,7 +3,7 @@ export const defaultData = {
   general: {
     name: 'Camille De Smet',
     title: 'Product designer · UX/UI & accessibilité',
-    profilePhoto: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=480&h=560&fit=crop&crop=faces',
+    profilePhoto: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=480&h=560&fit=crop&crop=faces',
     showPhoto: true,
     favicon: './favicon.svg',
     year: new Date().getFullYear()
