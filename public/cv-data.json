@@ -1,20 +1,20 @@
 {
   "general": {
-    "name": "Camille Desmet",
-    "title": "Product designer · UX/UI & accessibilités",
+    "name": "Camille Dellicour",
+    "title": "Product designeuse · UX/UI & accessibilités",
     "profilePhoto": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=480&h=560&fit=crop&crop=faces",
     "showPhoto": true,
     "favicon": "./favicon.svg",
     "year": 2026
   },
   "contact": {
-    "email": "noor.desmet@example.com",
-    "phone": "+32 470 12 34 56",
-    "showPhone": true,
+    "email": "camille.desmet@example.com",
+    "phone": "+32 470 12 34 59",
+    "showPhone": false,
     "linkedin": "https://www.linkedin.com/in/noor-desmet-demo/",
-    "showLinkedin": true,
+    "showLinkedin": false,
     "portfolio": "https://noordesmet.example.com",
-    "showPortfolio": true
+    "showPortfolio": false
   },
   "profile": {
     "summary": "Product designer basée à Bruxelles, j’aide les équipes produit à transformer des besoins complexes en parcours numériques clairs, inclusifs et agréables à utiliser. De la recherche utilisateur au prototypage, je travaille en étroite collaboration avec le développement et les parties prenantes."
