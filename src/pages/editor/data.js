@@ -1,7 +1,7 @@
 // Données entièrement fictives, adaptées à un profil numérique en Belgique.
 export const defaultData = {
   general: {
-    name: 'Noor De Smet',
+    name: 'Camille De Smet',
     title: 'Product designer · UX/UI & accessibilité',
     profilePhoto: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=480&h=560&fit=crop&crop=faces',
     showPhoto: true,
