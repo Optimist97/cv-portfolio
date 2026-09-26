@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1ea">
+  <meta name="description" content="CV et portfolio professionnel">
+  <title>CV — Clémence Martin</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <style>
+    :root{color-scheme:light;--paper:#f4f1ea;--ink:#252722;--muted:#74746d;--line:#dcd7cc;--accent:#a34f37;--white:#fffefa}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 Inter,"Avenir Next",Avenir,system-ui,sans-serif}
+    a{color:inherit;text-decoration:none}a:hover{color:var(--accent)}.page{max-width:1100px;margin:auto;padding:64px 7vw 36px}
+    .topline{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.73rem;letter-spacing:.16em;text-transform:uppercase}.topline:before{content:"";width:34px;height:1px;background:var(--accent)}
+    header{padding:58px 0 42px;border-bottom:1px solid var(--line);position:relative}.hero{display:grid;grid-template-columns:1fr auto;align-items:center;gap:40px}.eyebrow{color:var(--accent);font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;margin:0 0 14px}
+    h1{font:500 clamp(3.5rem,9vw,7rem)/.98 Georgia,"Times New Roman",serif;letter-spacing:-.055em;margin:0 0 22px;max-width:760px}h1 .surname{font-style:italic;color:var(--accent)}.role{font-size:1.05rem;color:var(--muted);margin:0}
+    .portrait{width:166px;height:190px;object-fit:cover;border-radius:48% 48% 4px 4px;filter:saturate(.78);box-shadow:12px 12px 0 #e7dfd3}.contacts{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:30px;font-size:.88rem}.contacts a:after{content:" ↗";color:var(--accent)}
+    .intro{display:grid;grid-template-columns:200px 1fr;gap:32px;padding:40px 0 44px;border-bottom:1px solid var(--line)}.kicker,.section-label{font-size:.73rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:6px 0}.intro p{font:1.25rem/1.65 Georgia,"Times New Roman",serif;max-width:720px;margin:0;color:#484943;white-space:pre-line}
+    .columns{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(250px,.8fr);gap:64px;padding:44px 0 32px}.section{margin:0 0 44px}.section-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:23px}.section-head span{font:1.75rem Georgia,serif}.section-head small{color:var(--muted);font-size:.68rem;letter-spacing:.13em;text-transform:uppercase}
+    .entry{position:relative;padding:0 0 25px 19px;border-left:1px solid var(--line);margin-left:4px}.entry:last-child{padding-bottom:0}.entry:before{content:"";position:absolute;left:-4px;top:8px;width:7px;height:7px;background:var(--accent);border-radius:50%}.entry-top{display:flex;justify-content:space-between;gap:16px;align-items:baseline}.entry h3,.project h3{font-size:1rem;margin:0;font-weight:650}.period{font-size:.76rem;white-space:nowrap;color:var(--accent)}.meta{color:var(--muted);font-size:.88rem;margin:3px 0 8px}.entry p,.project p{font-size:.89rem;color:#62635d;margin:0;white-space:pre-line}.skill-group{margin:0 0 22px}.skill-group h3{font-size:.79rem;letter-spacing:.04em;margin:0 0 8px}.tags{display:flex;flex-wrap:wrap;gap:7px}.tag{font-size:.76rem;background:#e9e5dc;padding:4px 10px;border-radius:2px;color:#565750}.project{padding:0 0 20px;margin:0 0 18px;border-bottom:1px solid var(--line)}.project a{color:var(--accent);font-size:.82rem;display:inline-block;margin-top:8px}.languages{display:grid;gap:10px}.language{display:flex;justify-content:space-between;gap:15px;font-size:.85rem}.language span:last-child{color:var(--muted)}footer{border-top:1px solid var(--line);padding-top:20px;display:flex;justify-content:space-between;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase}
+    .maintenance{position:fixed;inset:0;background:var(--paper);display:grid;place-items:center;text-align:center;padding:30px;z-index:5}.maintenance[hidden]{display:none}.maintenance p{font:clamp(2rem,6vw,4rem)/1.2 Georgia,serif;max-width:700px}
+    @media(max-width:700px){.page{padding:32px 22px}.hero{grid-template-columns:1fr auto;gap:18px}.portrait{width:96px;height:120px;box-shadow:7px 7px 0 #e7dfd3}header{padding:40px 0 30px}h1{font-size:clamp(3rem,13vw,5rem)}.contacts{gap:8px 16px}.intro{grid-template-columns:1fr;gap:12px;padding:28px 0}.intro p{font-size:1.1rem}.columns{grid-template-columns:1fr;gap:4px;padding-top:30px}.entry-top{align-items:flex-start;flex-direction:column;gap:1px}.period{white-space:normal}}
+    @media print{body{background:#fff}.page{padding:12mm 15mm;max-width:none}.portrait{box-shadow:none}.maintenance{display:none!important}.entry,.project{break-inside:avoid}a{color:inherit}}
+  </style>
+</head>
+<body>
+  <main class="page" id="resume" hidden>
+    <div class="topline">Curriculum vitæ <span id="year"></span></div>
+    <header><div class="hero"><div><p class="eyebrow" id="eyebrow"></p><h1><span id="firstName"></span><br><span class="surname" id="lastName"></span></h1><p class="role" id="role"></p></div><img id="portrait" class="portrait" alt="Portrait"></div><nav class="contacts" id="contacts" aria-label="Coordonnées"></nav></header>
+    <section class="intro" id="intro"><div class="kicker">En quelques mots</div><p id="summary"></p></section>
+    <div class="columns"><div><section class="section" id="experienceSection"><div class="section-head"><span>01</span><small>Expériences</small></div><div id="experiences"></div></section><section class="section" id="educationSection"><div class="section-head"><span>02</span><small>Formation</small></div><div id="education"></div></section><section class="section" id="projectsSection"><div class="section-head"><span>03</span><small>Projets choisis</small></div><div id="projects"></div></section></div><aside><section class="section" id="skillsSection"><div class="section-head"><span>04</span><small>Expertises</small></div><div id="skills"></div></section><section class="section" id="languagesSection"><div class="section-head"><span>05</span><small>Langues</small></div><div class="languages" id="languages"></div></section></aside></div>
+    <footer><span id="footerName"></span><span>Portfolio · Curriculum vitæ</span></footer>
+  </main>
+  <div class="maintenance" id="maintenance" hidden><p id="maintenanceText"></p></div>
+  <script type="module" src="./resume.js"></script>
+</body>
+</html>
