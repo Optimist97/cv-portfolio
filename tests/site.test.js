@@ -40,6 +40,7 @@ test('published example data has editable CV sections and maintenance settings',
 test('online CMS starts on a dedicated GitHub login screen, never pre-fills a token, and is not linked from the CV', async () => {
   const editor = await readFile('src/cms.html', 'utf8');
   const editorLogic = await readFile('src/pages/editor/app.js', 'utf8');
+  const frontendLogic = await readFile('src/resume.js', 'utf8');
   const publicPage = await readFile('dist/index.html', 'utf8');
   assert.match(editor, /id="loginView"/);
   assert.match(editor, /id="editorApp" hidden/);
@@ -54,6 +55,12 @@ test('online CMS starts on a dedicated GitHub login screen, never pre-fills a to
   assert.match(editor, /Conseils RH · privés au CMS/);
   assert.match(editor, /Montrer les résultats/);
   assert.match(editorLogic, /cv-hr-audit-visible/);
+  assert.match(editor, /id="maintenanceEnabled"/);
+  assert.match(editor, /ne s’affiche que sur le site public/);
+  assert.doesNotMatch(editor, /maintenanceScreen|maintenance-screen/);
+  assert.doesNotMatch(editorLogic, /maintenanceScreen/);
+  assert.match(frontendLogic, /if \(data\.maintenance\?\.enabled\)/);
+  assert.match(frontendLogic, /show\('maintenance', true\)/);
   assert.doesNotMatch(publicPage, /cms\.html|githubToken|Connexion à votre CV/);
   assert.doesNotMatch(publicPage, /Conseils RH|hrAuditToggle|cv-hr-audit-visible/);
 });

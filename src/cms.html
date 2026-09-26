@@ -412,8 +412,6 @@
       }
     }
 
-    .maintenance-screen { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; padding: 2rem; background: #f8fafc; color: #1f2937; text-align: center; font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 700; }
-    .maintenance-screen[hidden] { display: none; }
     [hidden] { display: none !important; }
     .login-page { min-height:100vh; display:grid; place-items:center; padding:2rem 1rem; background:#f3f0eb; }
     .login-card { width:min(100%, 440px); padding:clamp(1.5rem,5vw,2.5rem); background:#fffdfa; border:1px solid #e6e1d9; border-radius:16px; box-shadow:0 24px 70px rgba(45,40,32,.09); }
@@ -549,7 +547,7 @@
         <h3>Publication</h3>
         <label><input type="checkbox" id="maintenanceEnabled"> Activer la page de maintenance</label>
         <div class="form-group"><label>Message affiché</label><textarea id="maintenanceMessage">Ce site est en maintenance. Revenez bientôt !</textarea></div>
-        <p style="font-size:.82rem;color:var(--text-muted);line-height:1.5;margin:.75rem 0">Les données publiées sont visibles par tous sur GitHub Pages.</p>
+        <p style="font-size:.82rem;color:var(--text-muted);line-height:1.5;margin:.75rem 0">Le message de maintenance ne s’affiche que sur le site public après publication. Le CMS reste accessible pour modifier le message ou désactiver la maintenance.</p>
         <button class="btn btn-primary" data-action="publishGitHub" disabled style="width:100%;justify-content:center">Publier les changements</button>
         <button class="btn btn-secondary" data-action="bootstrapGitHub" disabled style="width:100%;margin-top:.5rem;justify-content:center">Installer le site dans le dépôt</button>
       </div>
@@ -671,8 +669,6 @@
       </article>
     </main>
   </div>
-  <div id="maintenanceScreen" class="maintenance-screen" hidden></div>
-
   <script type="module">
     import { App } from './pages/editor/app.js';
     window.app = new App();

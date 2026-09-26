@@ -290,9 +290,6 @@ class App {
     document.getElementById('previewSkills').innerHTML = this.data.skills.map(s => `<div class="skill-category"><h3>${escapeHtml(s.category)}</h3><div class="skills-list">${s.items.map(i => `<span class="skill-tag">${escapeHtml(i)}</span>`).join('')}</div></div>`).join('');
     document.getElementById('previewProjects').innerHTML = this.data.projects.filter(p => p.title || p.description).map(p => `<div class="project-card"><h3>${escapeHtml(p.title)}</h3><p>${escapeHtml(p.description).replace(/\n/g, '<br>')}</p>${safeExternalUrl(p.link) ? `<a href="${safeExternalUrl(p.link)}" target="_blank" rel="noopener noreferrer">Voir le projet ↗</a>` : ''}</div>`).join('');
     document.getElementById('previewLanguages').innerHTML = this.data.languages.map(l => `<span class="skill-tag">${escapeHtml(l.language)}${l.level ? ` · ${escapeHtml(l.level)}` : ''}</span>`).join('');
-    const maintenance = document.getElementById('maintenanceScreen');
-    maintenance.hidden = !this.githubToken || !this.data.maintenance?.enabled;
-    maintenance.textContent = this.data.maintenance?.message || 'Ce site est en maintenance.';
     document.querySelectorAll('.preview-section').forEach(section => {
       const content = section.querySelector(':scope > p')?.textContent.trim() || section.querySelector(':scope > div')?.innerHTML.trim();
       section.hidden = !content;
