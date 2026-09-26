@@ -7,7 +7,17 @@ const project = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const root = path.join(project, 'src');
 const publicDir = path.join(project, 'public');
 const outDir = path.join(project, 'dist');
-const common = { configFile: false, root, base: './', publicDir, build: { outDir, emptyOutDir: true } };
+const common = {
+  configFile: false,
+  root,
+  base: './',
+  publicDir,
+  build: {
+    outDir,
+    emptyOutDir: true,
+    rollupOptions: { input: { index: path.join(root, 'index.html'), cms: path.join(root, 'cms.html') } },
+  },
+};
 const mode = process.argv[2];
 const publishableFiles = [
   '.gitignore', 'README.md', 'package.json', 'package-lock.json',

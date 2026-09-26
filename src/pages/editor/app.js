@@ -26,6 +26,8 @@ class App {
     this.bindEvents();
     this.renderAll();
     this.updateStatus('Enregistré');
+    const localBootstrap = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    document.querySelector('[data-action="bootstrapGitHub"]').hidden = !localBootstrap;
   }
 
   bindEvents() {
@@ -177,7 +179,7 @@ class App {
     else if (id === 'generalFavicon') this.data.general.favicon = e.target.value;
     else if (id === 'generalYear') this.data.general.year = Number(e.target.value) || new Date().getFullYear();
     else if (id === 'generalShowPhoto') this.data.general.showPhoto = e.target.checked;
-    else if (id.startsWith('contact')) this.data.contact[this.getIdName(id)] = e.target.value;
+    else if (id.startsWith('contact')) this.data.contact[this.getIdName(id)] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     else if (id === 'profileSummary') this.data.profile.summary = e.target.value;
     else if (id === 'maintenanceEnabled') this.data.maintenance.enabled = e.target.checked;
     else if (id === 'maintenanceMessage') this.data.maintenance.message = e.target.value;
@@ -198,7 +200,7 @@ class App {
     const g = this.data.general;
     document.getElementById('previewName').textContent = g.name || 'Votre Nom';
     document.getElementById('previewTitle').textContent = g.title || 'Votre Titre';
-    document.getElementById('previewPhoto').src = g.profilePhoto || '/placeholder.jpg';
+    document.getElementById('previewPhoto').src = g.profilePhoto || './placeholder.jpg';
     document.getElementById('previewPhoto').hidden = !g.profilePhoto || !g.showPhoto;
     document.getElementById('previewProfile').textContent = this.data.profile.summary || '';
     document.getElementById('previewYear').textContent = g.year || new Date().getFullYear();
@@ -593,13 +595,13 @@ class App {
     if (contacts.email) {
       html += `<a href="mailto:${escapeHtml(contacts.email)}">${escapeHtml(contacts.email)}</a>`;
     }
-    if (contacts.phone) {
+    if (contacts.phone && contacts.showPhone !== false) {
       html += `<a href="tel:${contacts.phone.replace(/\D/g, '')}">${escapeHtml(contacts.phone)}</a>`;
     }
-    if (contacts.linkedin) {
+    if (contacts.linkedin && contacts.showLinkedin !== false) {
       if (safeExternalUrl(contacts.linkedin)) html += `<a href="${safeExternalUrl(contacts.linkedin)}" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>`;
     }
-    if (contacts.portfolio) {
+    if (contacts.portfolio && contacts.showPortfolio !== false) {
       if (safeExternalUrl(contacts.portfolio)) html += `<a href="${safeExternalUrl(contacts.portfolio)}" target="_blank" rel="noopener noreferrer">Portfolio ↗</a>`;
     }
 
@@ -608,7 +610,7 @@ class App {
   }
 
   syncInputs() {
-    const values = { generalName: this.data.general.name, generalTitle: this.data.general.title, generalProfilePhoto: this.data.general.profilePhoto, generalFavicon: this.data.general.favicon, generalYear: this.data.general.year, generalShowPhoto: this.data.general.showPhoto !== false, contactEmail: this.data.contact.email, contactPhone: this.data.contact.phone, contactLinkedin: this.data.contact.linkedin, contactPortfolio: this.data.contact.portfolio, profileSummary: this.data.profile.summary, maintenanceEnabled: this.data.maintenance?.enabled, maintenanceMessage: this.data.maintenance?.message };
+    const values = { generalName: this.data.general.name, generalTitle: this.data.general.title, generalProfilePhoto: this.data.general.profilePhoto, generalFavicon: this.data.general.favicon, generalYear: this.data.general.year, generalShowPhoto: this.data.general.showPhoto !== false, contactEmail: this.data.contact.email, contactPhone: this.data.contact.phone, contactShowPhone: this.data.contact.showPhone !== false, contactLinkedin: this.data.contact.linkedin, contactShowLinkedin: this.data.contact.showLinkedin !== false, contactPortfolio: this.data.contact.portfolio, contactShowPortfolio: this.data.contact.showPortfolio !== false, profileSummary: this.data.profile.summary, maintenanceEnabled: this.data.maintenance?.enabled, maintenanceMessage: this.data.maintenance?.message };
     Object.entries(values).forEach(([id, value]) => { const input = document.getElementById(id); if (input) input[input.type === 'checkbox' ? 'checked' : 'value'] = value ?? ''; });
   }
 
@@ -630,8 +632,11 @@ class App {
       'generalProfilePhoto': 'profilePhoto',
       'contactEmail': 'email',
       'contactPhone': 'phone',
+      'contactShowPhone': 'showPhone',
       'contactLinkedin': 'linkedin',
+      'contactShowLinkedin': 'showLinkedin',
       'contactPortfolio': 'portfolio',
+      'contactShowPortfolio': 'showPortfolio',
       'generalYear': 'year'
     };
     return map[id];

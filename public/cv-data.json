@@ -1,20 +1,23 @@
 {
   "general": {
-    "name": "Clémence Martin",
-    "title": "Designer numérique · Développement front-end",
-    "profilePhoto": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=320&h=320&fit=crop&crop=faces",
+    "name": "Noor De Smet",
+    "title": "Product designer · UX/UI & accessibilité",
+    "profilePhoto": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=480&h=560&fit=crop&crop=faces",
     "showPhoto": true,
-    "favicon": "/favicon.svg",
+    "favicon": "./favicon.svg",
     "year": 2026
   },
   "contact": {
-    "email": "clemence@example.com",
-    "phone": "+33 6 12 34 56 78",
-    "linkedin": "https://www.linkedin.com/",
-    "portfolio": "https://example.com"
+    "email": "noor.desmet@example.com",
+    "phone": "+32 470 12 34 56",
+    "showPhone": true,
+    "linkedin": "https://www.linkedin.com/in/noor-desmet-demo/",
+    "showLinkedin": true,
+    "portfolio": "https://noordesmet.example.com",
+    "showPortfolio": true
   },
   "profile": {
-    "summary": "Designer numérique et développeuse front-end, je donne vie à des expériences web à la fois sensibles, accessibles et simples à utiliser. J’aime trouver le juste équilibre entre une idée singulière et une réalisation soignée."
+    "summary": "Product designer basée à Bruxelles, j’aide les équipes produit à transformer des besoins complexes en parcours numériques clairs, inclusifs et agréables à utiliser. De la recherche utilisateur au prototypage, je travaille en étroite collaboration avec le développement et les parties prenantes."
   },
   "maintenance": {
     "enabled": false,
@@ -23,63 +26,85 @@
   "experiences": [
     {
       "id": 1,
-      "title": "Développeuse web",
-      "company": "Studio Créatif",
-      "location": "Paris",
-      "period": "2022 — Aujourd’hui",
-      "description": "Création de sites web accessibles et accompagnement des clients dans leurs projets numériques.",
+      "title": "Product designer",
+      "company": "Studio Horizon (fictif)",
+      "location": "Bruxelles",
+      "period": "2022 — aujourd’hui",
+      "description": "Recherche utilisateur, conception de parcours et prototypage pour des services numériques. Co-création avec les équipes produit et développement ; amélioration continue de la bibliothèque de composants et de l’accessibilité.",
       "technologies": [
-        "JavaScript",
-        "CSS"
+        "Figma",
+        "Design system",
+        "WCAG"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "UX/UI designer",
+      "company": "Atelier Pixel (fictif)",
+      "location": "Namur",
+      "period": "2020 — 2022",
+      "description": "Conception de sites et d’outils métier pour des organisations locales. Animation d’ateliers, tests utilisateurs et livraison de maquettes documentées aux équipes techniques.",
+      "technologies": [
+        "Recherche UX",
+        "Prototypage",
+        "Agile"
       ]
     }
   ],
   "educations": [
     {
-      "id": 2,
-      "degree": "Licence Informatique",
-      "school": "Université de Paris",
-      "location": "Paris",
-      "period": "2019 — 2022",
-      "description": "Spécialisation en développement web."
+      "id": 3,
+      "degree": "Bachelier en communication visuelle",
+      "school": "École supérieure des arts Saint-Luc Bruxelles",
+      "location": "Bruxelles",
+      "period": "2016 — 2019",
+      "description": "Orientation design d’interaction et médias numériques."
     }
   ],
   "skills": [
     {
-      "category": "Développement",
+      "category": "Design produit",
       "items": [
-        "HTML",
-        "CSS",
-        "JavaScript"
+        "Recherche utilisateur",
+        "UX/UI",
+        "Prototypage",
+        "Figma"
       ]
     },
     {
-      "category": "Design",
+      "category": "Collaboration",
       "items": [
-        "Figma",
-        "Accessibilité"
+        "Design system",
+        "Accessibilité WCAG",
+        "Ateliers",
+        "Agile"
       ]
     }
   ],
   "projects": [
     {
-      "title": "Portfolio créatif",
-      "description": "Un site vitrine pour présenter des projets et partager mon travail.",
+      "title": "Parcours citoyen (projet fictif)",
+      "description": "Refonte d’un parcours de prise de rendez-vous : simplification des étapes, langage clair et expérience adaptée au mobile.",
       "link": "",
       "technologies": [
-        "HTML",
-        "CSS"
+        "UX research",
+        "Figma",
+        "Accessibilité"
       ]
     }
   ],
   "languages": [
     {
       "language": "Français",
-      "level": "Natif"
+      "level": "Langue maternelle"
+    },
+    {
+      "language": "Néerlandais",
+      "level": "Professionnel · B2"
     },
     {
       "language": "Anglais",
-      "level": "Courant"
+      "level": "Professionnel · C1"
     }
   ]
 }
