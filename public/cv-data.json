@@ -2,7 +2,7 @@
   "general": {
     "name": "Camille Dellicour",
     "title": "Product designeuse · UX/UI & accessibilités",
-    "profilePhoto": "https://images.unsplash.com/photo-1593529467220-9d721ceb9a78?w=480&h=560&fit=crop&crop=faces",
+    "profilePhoto": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=480&h=560&fit=crop&crop=faces",
     "showPhoto": true,
     "favicon": "./favicon.svg",
     "year": 2026
@@ -20,7 +20,7 @@
     "summary": "Product designer basée à Bruxelles, j’aide les équipes produit à transformer des besoins complexes en parcours numériques clairs, inclusifs et agréables à utiliser. De la recherche utilisateur au prototypage, je travaille en étroite collaboration avec le développement et les parties prenantes."
   },
   "maintenance": {
-    "enabled": true,
+    "enabled": false,
     "message": "Ce site est en maintenance. Revenez bientôt !"
   },
   "experiences": [
